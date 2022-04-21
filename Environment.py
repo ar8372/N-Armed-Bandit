@@ -12,14 +12,14 @@ input:=> action
 returns:=> reward
 """
 class N_Armed_Bandit:
-    def __init__(self,n, seed=2022):
+    def __init__(self,n, random_state):
         self.no_arms = n
         self.actions = [i for i in range(1, self.no_arms+1)]
         print(f"Actions: ")
         print(self.actions)
         
         # seed everything 
-        seedBasic(seed)
+        seedBasic(self,random_state)
 
         # initialize 
         self.initialize_()

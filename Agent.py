@@ -13,7 +13,7 @@ returns:=> Optimal policty
 """
 
 class Agents:
-    def __init__(self, name_agent, epsilon, env, n_iterations):
+    def __init__(self, name_agent, epsilon, env):
         #==> Types of Agent
         # Epsilon-Greedy Agent 
         # Optimistic Initial Start 
@@ -28,16 +28,18 @@ class Agents:
         # initialize expectedReward 
         self.initialize_()
     
-    def train(self, n_iterations, seed=2023):
+    def train(self, n_iterations, verbose=0, seed=2023):
         # seed it for reproducibility of result 
-        seedBasis(seed)
+        seedBasic(self,seed)
 
         for iter_no in range(n_iterations):
-            print(f"iteration no {iter_no}")
-            action = self.take_action 
-            print(f"action: {action}")
+            action = self.take_action() 
             reward = self.get_reward(action)
-            print(f"reward: {reward}")
+            if verbose >= 1:
+                print(f"iteration no {iter_no}")
+                print(f"action: {action}")
+                print(f"reward: {reward}")
+                print()
 
             # update
             self.update_expectedReward(action, reward)
@@ -49,13 +51,16 @@ class Agents:
     def initialize_(self):
         # initialize initial expected reward of each arm
         self.expectedReward = [0]*self.no_arms
+        print(f"Initial expectedRewards: ")
+        print(self.expectedReward)
+        print()
 
-    def take_actions(self):
+    def take_action(self):
         # returns argmax actions 1-epsilon times 
         prob = random.uniform(0,1)
         if prob > 1- self.epsilon:
             # argmax 
-            action = np.argmax(self.expectedReward)
+            action = self.actions[np.argmax(self.expectedReward)]
         else:
             # random choice 
             action = np.random.choice(self.actions)
@@ -64,10 +69,11 @@ class Agents:
     def get_reward(self, action):
         # environment will provide reward 
         reward_received = self.env.reward(action)
-
-
+        return reward_received
 
 
     def update_expectedReward(self, action_taken, reward_received):
-        pass 
+        index_ = self.actions.index(action_taken)
+        self.expectedReward[index_] += 0.2*(reward_received -self.expectedReward[index_] ) 
+
         
