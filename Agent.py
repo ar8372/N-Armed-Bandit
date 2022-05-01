@@ -13,7 +13,7 @@ returns:=> Optimal policty
 """
 
 class Agents:
-    def __init__(self, name_agent, epsilon, env):
+    def __init__(self, name_agent, epsilon, discount_factor, env):
         #==> Types of Agent
         # Epsilon-Greedy Agent 
         # Optimistic Initial Start 
@@ -21,6 +21,7 @@ class Agents:
         # Gradient Bandit Agent
         self.name_agent = name_agent
         self.epsilon = epsilon 
+        self.discount_factor = discount_factor
         self.env = env 
         self.no_arms = self.env.no_arms
         self.actions = self.env.actions
@@ -43,8 +44,7 @@ class Agents:
 
             # update
             self.update_expectedReward(action, reward)
-            print(f"New reward: {self.expectedReward}")
-            print()
+            print(f"iter no {iter_no}: {self.expectedReward}")
 
 
 
@@ -55,10 +55,15 @@ class Agents:
         print(self.expectedReward)
         print()
 
+    def best_action(self):
+        action = self.actions[np.argmax(self.expectedReward)]
+        return action
+
     def take_action(self):
-        # returns argmax actions 1-epsilon times 
-        prob = random.uniform(0,1)
-        if prob > 1- self.epsilon:
+        # 1-epsilon times exploit
+        # so epsilon tells how many times explore 
+        prob = random.uniform(0,1) #[low,high)
+        if prob > self.epsilon:
             # argmax 
             action = self.actions[np.argmax(self.expectedReward)]
         else:
@@ -74,6 +79,6 @@ class Agents:
 
     def update_expectedReward(self, action_taken, reward_received):
         index_ = self.actions.index(action_taken)
-        self.expectedReward[index_] += 0.2*(reward_received -self.expectedReward[index_] ) 
+        self.expectedReward[index_] += self.discount_factor*(reward_received -self.expectedReward[index_] ) 
 
         
