@@ -32,7 +32,7 @@ class Agents:
     def train(self, n_iterations, verbose=0, seed=2023):
         # seed it for reproducibility of result 
         seedBasic(self,seed)
-
+        avg_rewards = []
         for iter_no in range(n_iterations):
             action = self.take_action() 
             reward = self.get_reward(action)
@@ -45,6 +45,9 @@ class Agents:
             # update
             self.update_expectedReward(action, reward)
             print(f"iter no {iter_no}: {self.expectedReward}")
+
+            avg_rewards.append(np.mean(self.expectedReward))
+        return avg_rewards
 
 
 

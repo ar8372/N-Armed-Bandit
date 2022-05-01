@@ -15,7 +15,7 @@ if __name__ == "__main__":
     agent_name = "epsilon_greedy"
     epsilon = .4 # How many times to explore
     discount_factor = 0.7 # future reward importance
-    random_state = 100
+    random_state = 101
     _mean = 0
     _std = 0.01
     no_iterations = 1000
