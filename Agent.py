@@ -44,7 +44,7 @@ class Agents:
 
             # update
             self.update_expectedReward(action, reward)
-            print(f"iter no {iter_no}: {self.expectedReward}")
+            print(f"iter no {iter_no}: {[np.round(x,3) for x in self.expectedReward]}")
 
             avg_rewards.append(np.mean(self.expectedReward))
         return avg_rewards
